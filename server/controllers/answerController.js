@@ -101,15 +101,27 @@ module.exports = {
             }
   
             if (sudahVote) {
-              answer.votes[i].vote = voteStatus
-              answer.update({
-                votes: answer.votes
-              }).then((a)=>{
-                res.status(200).json({
-                  message: 'answer\'s vote updated successfully!',
-                  data: a
+              if (answer.votes[i].vote === voteStatus) {
+                answer.votes.splice(i, 1)
+                answer.update({
+                  votes: answer.votes
+                }).then((a) => {
+                  res.status(200).json({
+                    message: 'answer\'s vote removed!',
+                    data: a
+                  })
                 })
-              })
+              } else {
+                answer.votes[i].vote = voteStatus
+                answer.update({
+                  votes: answer.votes
+                }).then((a)=>{
+                  res.status(200).json({
+                    message: 'answer\'s vote updated successfully!',
+                    data: a
+                  })
+                })
+              }
             } else {
               let voteObj = {
                 userId: req.decoded.id,

@@ -12,5 +12,8 @@ export default {
 </script>
 
 <style scoped>
-
+.home {
+  height: auto;
+  min-height: 100vh;
+}
 </style>

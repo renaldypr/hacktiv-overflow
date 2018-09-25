@@ -5,7 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    isLogin: ''
+    isLogin: '',
+    errMessage: ''
   },
   mutations: {
     changeLoginStatus (state) {
@@ -13,6 +14,9 @@ export default new Vuex.Store({
     },
     logout (state) {
       state.isLogin = false
+    },
+    setErrMessage (state, message) {
+      state.errMessage = message
     }
   },
   actions: {
@@ -21,6 +25,9 @@ export default new Vuex.Store({
     },
     logout (context) {
       context.commit('logout')
+    },
+    sendErrMessage (context, message) {
+      context.commit('setErrMessage', message)
     }
   }
 })

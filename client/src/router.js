@@ -28,6 +28,12 @@ export default new Router({
       path: '/form',
       name: 'form',
       component: () => import('./views/QuestionForm.vue')
+    },
+    {
+      path: '/edit/:id',
+      name: 'edit',
+      props: true,
+      component: () => import('./views/QuestionEdit.vue')
     }
   ]
 })
