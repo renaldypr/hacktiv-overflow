@@ -24,6 +24,13 @@
           <div class="form-group">
             <button type="button" class="btn btn-primary btn-block" v-on:click="login()">Log in</button>
           </div>
+          <fb-signin-button
+            :params="fbSignInParams"
+            @success="onSignInSuccess"
+            @error="onSignInError">
+            Sign in with Facebook
+          </fb-signin-button>
+
         </div>
       </div>
     </div>
@@ -40,7 +47,11 @@ export default {
       emailLogin: '',
       passwordLogin: '',
       errorMsg: '',
-      successMsg: ''
+      successMsg: '',
+      fbSignInParams: {
+        scope: 'email,user_likes',
+        return_scopes: true
+      }
     }
   },
   methods: {
@@ -69,10 +80,35 @@ export default {
             this.$store.dispatch('changeLoginStatus')
           })
           .catch(err => {
-            this.errorMsg = 'Invalid email or password!'
+            this.errorMsg = err.response.data.message
           })
       }
-
+    },
+    onSignInSuccess (response) {
+      axios({
+          method: 'post',
+          url: `${url}/users/loginFB`,
+          headers: {
+            tokenfb: response.authResponse.accessToken
+          }
+        })
+          .then(data => {
+            self.emailLogin = ''
+            self.passwordLogin = ''
+            self.successMsg = 'Login success!'
+  
+            localStorage.setItem('email', data.data.email)
+            localStorage.setItem('user', data.data.user)
+            localStorage.setItem('token', data.data.token_jwt)
+  
+            this.$store.dispatch('changeLoginStatus')
+          })
+          .catch(err => {
+            this.errorMsg = err.response.data.message
+          })   
+    },
+    onSignInError (error) {
+      this.errorMsg = error
     }
   }
 }
@@ -81,5 +117,13 @@ export default {
 <style scoped>
 .btn-primary {
   background-color: #15441e;
+}
+.fb-signin-button {
+  /* This is where you control how the button looks. Be creative! */
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 3px;
+  background-color: #4267b2;
+  color: #fff;
 }
 </style>

@@ -20,6 +20,9 @@ var userSchema = new Schema({
     type: String,
     unique : true,
     required: [true, 'Please input your email!'],
+  },
+  isLoginViaFB: {
+    type: Boolean
   }
 }, {
   timestamps: true

@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const axios = require('axios');
 
 module.exports = {
   showAll: function(req,res) {
@@ -21,7 +22,8 @@ module.exports = {
     User.create({
       name: req.body.name,
       password: req.body.password,
-      email: req.body.email
+      email: req.body.email,
+      isLoginViaFB: false
     })
       .then(user => {
         res.status(201).json({
@@ -75,25 +77,31 @@ module.exports = {
     User.find({ email: req.body.email }, function (err, user) {
       if (!err) {
         if (user.length !== 0) {
-          if (bcrypt.compareSync(req.body.password, user[0].password)) {
-            jwt.sign({id: user[0]._id, name: user[0].name, email:user[0].email}, process.env.JWT_KEY, function(err, token) {
-              if (!err) {
-                res.status(200).json({
-                  user: user[0].name,
-                  email: user[0].email,
-                  token: token
-                })
-              } else {
-                res.status(500).json({
-                  message: 'jwt.sign error'
-                })
-              }
-            });
-          } else {
+          if (user[0].isLoginViaFB) {
             res.status(500).json({
-              message: 'wrong password!'
+              message: 'Please sign in via Facebook!'
             })
-          }   
+          } else {
+            if (bcrypt.compareSync(req.body.password, user[0].password)) {
+              jwt.sign({id: user[0]._id, name: user[0].name, email:user[0].email}, process.env.JWT_KEY, function(err, token) {
+                if (!err) {
+                  res.status(200).json({
+                    user: user[0].name,
+                    email: user[0].email,
+                    token: token
+                  })
+                } else {
+                  res.status(500).json({
+                    message: 'jwt.sign error'
+                  })
+                }
+              });
+            } else {
+              res.status(500).json({
+                message: 'wrong password!'
+              })
+            }   
+          }
         } else {
           res.status(500).json({
             message: 'you have not registered!'
@@ -104,6 +112,66 @@ module.exports = {
           message: err
         })
       }
-    });
+    })
+  },
+  loginFB: function(req,res) {
+    axios({
+      method:'get',
+      url:`https://graph.facebook.com/me?fields=id,name,email&access_token=${req.headers.tokenfb}`,
+    })
+      .then(function(response) {
+        User.find({email: response.data.email}, function(err, userData) {
+          if (!err) {
+            if(userData.length === 0) {
+              let newUser = new User({
+                name: response.data.name,
+                password: 'defaultpassword',
+                email: response.data.email,
+                isLoginViaFB: true
+              })
+              newUser.save((err, user) => {
+                if (!err) {
+                  jwt.sign({id: user._id, name: user.name, email: user.email}, process.env.JWT_KEY, (err, token) => {
+                    res.status(200).json({
+                      user: user.name,
+                      email: user.email,
+                      token_jwt: token
+                    })
+                  })
+                } else {
+                  res.status(500).json(err)
+                }
+              })
+            } else {
+              User.findOne({ email: response.data.email }, function(err,user) {
+                if(!err) {
+                  if(user) {
+                    jwt.sign({id: user._id, name: user.name, email: user.email}, process.env.JWT_KEY, (err, token) => {
+                      res.status(200).json({
+                        user: user.name,
+                        email: user.email,
+                        token_jwt: token
+                      })
+                    })
+                  } else {
+                    res.status(404).json({
+                      message:'user not found!'
+                    })
+                  }
+                } else {
+                  res.status(500).json({
+                    message: err
+                  })
+                }
+              })
+            }
+          } else {
+            res.status(500).json(err);
+          }
+        })
+      })
+      .catch(err => {
+        res.status(500).json(err)
+      })
   }
 }
