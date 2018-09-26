@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <router-link class="text-light" :to="{ name: 'form' }"><button type="button" class="btn btn-primary btn-lg mt-3 mb-3">Ask Question</button></router-link>
+    <router-link class="text-light" :to="{ name: 'form' }"><button type="button" class="btn text-light btn-lg mt-3 mb-3">Ask Question</button></router-link>
     <Card v-for="(question, index) in questions" :key="index" v-bind:questionData="question"></Card>
   </div>
 </template>
@@ -38,5 +38,8 @@ export default {
 </script>
 
 <style scoped>
-
+.container{
+  height: auto;
+  min-height: 100vh;
+}
 </style>

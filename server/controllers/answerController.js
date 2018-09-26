@@ -1,5 +1,7 @@
 const Answer = require('../models/answer');
 const Question = require('../models/question');
+const kue = require('kue');
+const queue = kue.createQueue();
 
 module.exports = {
   showAll: function(req,res) {
@@ -31,9 +33,30 @@ module.exports = {
           {safe: true, upsert: true, new : true},
           function(err, model) {
             if(!err) {
-              res.status(201).json({
-                message: 'answer created successfully!',
-                data: answer
+              queue.create('email', {
+                title: 'Someone has answered your question, ' + req.body.name + '!',
+                to: req.body.email,
+                name: req.body.name,
+                template: `<h3><b>Hello, ${req.body.name}! Your question has been answered!</b></h3>
+                <img style="width: 50px; height: 50px;" src="https://d1qb2nb5cznatu.cloudfront.net/startups/i/32728-274244db60c65e1cc32abb4c54a2c582-medium_jpg.jpg?buster=1442602512"/>
+                <p>Check out your question's thread now!</p>
+                <a href="#">Click here to go there immediately.</a>
+                <hr>
+                <p>Sincerely,</p>
+                <p>Your Hacktiv-Overflow Team</p>`
+              })          
+                .save( function(err){
+                if( !err ) {
+                  res.status(201).json({
+                    message: 'answer created successfully!',
+                    data: answer
+                  })
+                } else {
+                  console.log(err)
+                  res.status(500).json({
+                    message: err
+                  })
+                }
               })
             } else {
               res.status(500).json({

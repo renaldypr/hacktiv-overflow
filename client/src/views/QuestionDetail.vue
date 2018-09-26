@@ -6,11 +6,11 @@
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <h3 class="text-left mt-4">{{ question.title }}</h3>
-    <div class="row border-top pb-3 pt-3">
+    <h3 class="text-left mt-4 text-light">{{ question.title }}</h3>
+    <div class="row border-top pb-3 pt-3 text-light">
       <div class="col-md-1">
         <i class="fas fa-arrow-alt-circle-up" :class="upvoteColor" v-on:click="upvote"></i>
-        <p class="m-0">{{ voteTotal }}</p>
+        <p class="m-0" style="font-size: 20px;">{{ voteTotal }}</p>
         <i class="fas fa-arrow-alt-circle-down" :class="downvoteColor" v-on:click="downvote"></i>
       </div>
       <div class="col-md-11 text-left">
@@ -26,19 +26,19 @@
           Question Tools
         </button>
         <div class="dropdown-menu dropdown-menu-left">
-          <a class="dropdown-item" href="#"><router-link class="text-dark" :to="{ name: 'edit', params: { id: id } }">Update Question</router-link></a>
+          <a class="dropdown-item"><router-link class="text-dark" style="text-decoration: none;" :to="{ name: 'edit', params: { id: id } }">Update Question</router-link></a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#" v-on:click="deleteQuestion">Delete Question</a>
+          <a class="dropdown-item" v-on:click="deleteQuestion" style="cursor: pointer;">Delete Question</a>
         </div>
       </div>
     </div>
-    <h4 class="text-left pb-2 border-bottom">Your Answer</h4>
+    <h4 class="text-left text-light pb-2 border-bottom">Your Answer</h4>
     <div v-if="isLogin" class="form-group pt-3 mb-5 text-left">
       <textarea v-model="answerInput" class="form-control mb-3 w-50" rows="5" id="answerInput" placeholder="Post an answer"></textarea>
       <button v-on:click="postAnswer" type="button" class="btn text-light">Submit</button>
     </div>
-    <p class="mt-3 mb-5 text-dark text-left" v-if="!isLogin">Please <a class="text-dark" href="#" data-toggle="modal" data-target="#loginModal">login</a> to post an answer</p>
-    <h4 v-if="question.answers.length !== 0" class="text-left border-bottom pb-2">{{ question.answers.length }} Answers</h4>
+    <p class="mt-3 mb-5 text-light text-left" v-if="!isLogin">Please <a class="text-light" href="#" data-toggle="modal" data-target="#loginModal">login</a> to post an answer</p>
+    <h4 v-if="question.answers.length !== 0" class="text-left text-light border-bottom pb-2">{{ question.answers.length }} Answers</h4>
     <Answer v-bind:questionId="id" v-on:refresh-data="refreshData" v-for="(answer,index) in question.answers" :key="index" v-bind:answerData="answer"></Answer>
   </div>
 </template>
@@ -233,12 +233,16 @@ i {
   cursor: pointer;
 }
 .upvoted {
-  color: rgb(58, 38, 243);
+  color: #4e6eff;
 }
 .downvoted {
-  color: rgb(190, 26, 26);
+  color: rgb(238, 80, 80);
 }
 .dropdown-item {
   font-size: 14px;
+}
+.container {
+  height: auto;
+  min-height: 100vh;
 }
 </style>

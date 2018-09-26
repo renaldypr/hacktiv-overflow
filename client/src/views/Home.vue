@@ -1,6 +1,7 @@
 <template>
   <div class="home">
-    <h1>Hacktiv-Overflow</h1>
+    <h1 class="title">Hacktiv-Overflow</h1>
+    <p>Have questions? Asked the community!</p>
   </div>
 </template>
 
@@ -15,5 +16,16 @@ export default {
 .home {
   height: auto;
   min-height: 100vh;
+}
+h1 {
+  color: #66fcf1;
+  font-size: 120px;
+}
+p {
+  color: #66fcf1;
+  font-size: 40px;
+}
+.title {
+  margin-top: 120px;
 }
 </style>

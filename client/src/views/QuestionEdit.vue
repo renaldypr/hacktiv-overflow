@@ -1,6 +1,6 @@
 <template>
   <div id="form">
-    <h1 class="text-dark mt-4">Update Question</h1>
+    <h1 class="text-light mt-4">Update Question</h1>
     <div class="card mt-4 mb-4 w-75 mx-auto">
       <div class="card-body">
         <div class="form-group">
@@ -10,7 +10,7 @@
           <textarea v-model="contentEdit" class="form-control" rows="6" id="content"></textarea>
         </div>
         <div class="form-group">
-          <button type="button" class="btn btn-secondary btn-block" v-on:click="updateQuestion()">Update Question</button>
+          <button type="button" class="btn btn-block text-light" v-on:click="updateQuestion()">Update Question</button>
         </div>
       </div>
     </div>
@@ -72,5 +72,8 @@ export default {
 #form {
   height: auto;
   min-height: 100vh;
+}
+.card {
+  background: #c5c6c7;
 }
 </style>

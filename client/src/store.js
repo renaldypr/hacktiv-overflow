@@ -17,6 +17,9 @@ export default new Vuex.Store({
     },
     setErrMessage (state, message) {
       state.errMessage = message
+      setTimeout(() => {
+        state.errMessage = ''
+      }, 3000)
     }
   },
   actions: {

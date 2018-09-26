@@ -6,10 +6,10 @@
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <div class="row border-bottom pb-3 pt-3">
+    <div class="row border-bottom pb-3 pt-3 text-light">
       <div class="col-md-1">
         <i class="fas fa-arrow-alt-circle-up" :class="upvoteColor" v-on:click="upvote"></i>
-        <p class="m-0">{{ voteTotal }}</p>
+        <p class="m-0" style="font-size: 20px;">{{ voteTotal }}</p>
         <i class="fas fa-arrow-alt-circle-down" :class="downvoteColor" v-on:click="downvote"></i>
       </div>
       <div class="col-md-11 text-left">
@@ -19,11 +19,11 @@
           </div>
           <div class="col-md-3">
             <p class="author mb-0 ">{{ answerData.userId.name }}</p>
-            <p class="text-muted">Answered {{ convertDate(answerData.createdAt) }}</p>
+            <p class="text-light">Answered {{ convertDate(answerData.createdAt) }}</p>
           </div>
         </div>
         <div v-if="!editAnswer && ownAnswer" class="dropdown">
-          <i class="fas fa-ellipsis-v float-right text-dark" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+          <i class="fas fa-ellipsis-v float-right text-light" style="font-size: 20px;" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" v-on:click="triggerUpdateAnswer">Update Answer</a>
           </div>
@@ -188,9 +188,9 @@ i, .dropdown-item {
   cursor: pointer;
 }
 .upvoted {
-  color: rgb(58, 38, 243);
+  color: #4e6eff;
 }
 .downvoted {
-  color: rgb(190, 26, 26);
+  color: rgb(238, 80, 80);
 }
 </style>

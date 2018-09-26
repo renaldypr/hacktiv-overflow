@@ -2,6 +2,9 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const axios = require('axios');
+const kue = require('kue');
+const queue = kue.createQueue();
+const nodemailer = require('nodemailer');
 
 module.exports = {
   showAll: function(req,res) {
@@ -26,9 +29,31 @@ module.exports = {
       isLoginViaFB: false
     })
       .then(user => {
-        res.status(201).json({
-          message: 'user created successfully!',
-          data: user
+        queue.create('email', {
+          title: 'Welcome to Hacktiv-Overflow, ' + user.name + '!',
+          to: user.email,
+          name: user.name,
+          template: `<h3><b>Hello, ${user.name}! Welcome to Hacktiv-Overflow!</b></h3>
+          <img style="width: 50px; height: 50px;" src="https://d1qb2nb5cznatu.cloudfront.net/startups/i/32728-274244db60c65e1cc32abb4c54a2c582-medium_jpg.jpg?buster=1442602512"/>
+          <p>You are now joining the best community on the internet!</p>
+          <p>Please feel free to start asking questions, and helping out other members of the community!</p>
+          <hr>
+          <p>Have fun!</p>
+          <p>Sincerely,</p>
+          <p>Your Hacktiv-Overflow Team</p>`
+        })          
+          .save( function(err){
+          if( !err ) {
+            res.status(201).json({
+              message: 'user created successfully!',
+              data: user
+            })
+          } else {
+            console.log(err)
+            res.status(500).json({
+              message: err
+            })
+          }
         })
       })
       .catch(err => {
@@ -131,12 +156,31 @@ module.exports = {
               })
               newUser.save((err, user) => {
                 if (!err) {
-                  jwt.sign({id: user._id, name: user.name, email: user.email}, process.env.JWT_KEY, (err, token) => {
-                    res.status(200).json({
-                      user: user.name,
-                      email: user.email,
-                      token_jwt: token
-                    })
+                  queue.create('email', {
+                    title: 'Welcome to Hacktiv-Overflow, ' + user.name + '!',
+                    to: user.email,
+                    name: user.name,
+                    template: `<h3><b>Hello, ${user.name}! Welcome to Hacktiv-Overflow!</b></h3>
+                    <img style="width: 50px; height: 50px;" src="https://d1qb2nb5cznatu.cloudfront.net/startups/i/32728-274244db60c65e1cc32abb4c54a2c582-medium_jpg.jpg?buster=1442602512"/>
+                    <p>You are now joining the best community on the internet!</p>
+                    <p>Please feel free to start asking questions, and helping out other members of the community!</p>
+                    <hr>
+                    <p>Have fun!</p>
+                    <p>Sincerely,</p>
+                    <p>Your Hacktiv-Overflow Team</p>`
+                  })          
+                    .save( function(err){
+                    if( !err ) {
+                      res.status(201).json({
+                        message: 'user created successfully!',
+                        data: user
+                      })
+                    } else {
+                      console.log(err)
+                      res.status(500).json({
+                        message: err
+                      })
+                    }
                   })
                 } else {
                   res.status(500).json(err)

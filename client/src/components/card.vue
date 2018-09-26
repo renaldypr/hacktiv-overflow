@@ -11,7 +11,7 @@
                   <p class="pt-1">Answers</p>
                 </div>
                 <div class="col-md-10 text-left">
-                  <h4><router-link class="text-dark" :to="{ name: 'details', params: { id: questionData._id } }">{{ questionData.title }}</router-link></h4>
+                  <h4><router-link :to="{ name: 'details', params: { id: questionData._id } }">{{ questionData.title }}</router-link></h4>
                   <p>{{ questionData.userId.name }} | {{ convertDate(questionData.createdAt) }} </p>
                 </div>
             </div>
@@ -53,5 +53,10 @@ export default {
 </script>
 
 <style scoped>
-
+.card {
+  background: #c5c6c7;
+}
+p, h4, a {
+  color: #0b0c10;
+}
 </style>

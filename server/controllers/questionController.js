@@ -12,6 +12,7 @@ module.exports = {
             model: 'User'
         }
       })
+      .sort({createdAt: -1})
       .exec((err, questions) => {
       if(!err) {
         res.status(200).json({

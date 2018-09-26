@@ -25,20 +25,22 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  background: #1f2833;
 }
 #nav {
   padding: 30px;
 }
-
 #nav a {
   font-weight: bold;
   color: #2c3e50;
 }
-
 #nav a.router-link-exact-active {
   color: #42b983;
 }
 .btn {
-  background: rgb(70, 1, 70)
+  background: #45a29e;
+}
+i {
+  font-size: 24px;
 }
 </style>
